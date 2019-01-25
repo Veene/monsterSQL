@@ -13,16 +13,23 @@ class GenerationEngine {
     clearTimeout(this.timer)
   }
   buildNewGeneration() {
-    this.generation = new Generation()
+    const generation = new Generation();
 
     //everytime buildNewGen runs, pool from module pg(node-postgre) inserts query
-    GenerationTable.storeGeneration(this.generation)
+    GenerationTable.storeGeneration(generation)
+      //storeGen now resolves a promise with generationId
+      .then(({ generationId }) => {
+        this.generation = generation;
+        //we created this.generationId on generation to be undefined
+        this.generation.generationId = generationId;
 
-    console.log('new generation: ', this.generation)
+        console.log('new generation: ', this.generation)
 
-    this.timer = setTimeout(() => {
-      this.buildNewGeneration()
-    },this.generation.expiration.getTime() - Date.now() ); //getTime returns milliseconds, date.now returns milliseconds
+        this.timer = setTimeout(() => {
+          this.buildNewGeneration()
+        },this.generation.expiration.getTime() - Date.now() ); //getTime returns milliseconds, date.now returns milliseconds
+      })
+      .catch((error) => console.error(error));
   }
 }
 

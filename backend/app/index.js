@@ -10,7 +10,7 @@ app.locals.engine = engine;
 app.use('/dragon', dragonRouter)
 app.use('/generation', generationRouter)
 
-
+//this is where the magic happens. recursive build is called for generations
 engine.start();
 app.get('/', (req, res) => {
   res.send('Hello John');
