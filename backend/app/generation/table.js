@@ -17,8 +17,6 @@ const GenerationTable = {
         }
       );
     });
-
-    
-  }
+  },
 }
 module.exports = GenerationTable;
