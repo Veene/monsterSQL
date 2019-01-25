@@ -1,4 +1,5 @@
 const Generation = require('./index.js')
+const GenerationTable = require('./table.js')
 
 class GenerationEngine {
   constructor() {
@@ -14,7 +15,10 @@ class GenerationEngine {
   buildNewGeneration() {
     this.generation = new Generation()
 
-    console.log('new gen: ', this.generation)
+    //everytime buildNewGen runs, pool from module pg(node-postgre) inserts query
+    GenerationTable.storeGeneration(this.generation)
+
+    console.log('new generation: ', this.generation)
 
     this.timer = setTimeout(() => {
       this.buildNewGeneration()
