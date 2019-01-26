@@ -1,6 +1,7 @@
 const TRAITS = require('../../data/traits.json')
 
 const DEFAULT_PROPERTIES = {
+  dragonId: undefined,
   nickname: 'unnamed',
   //object getter so that its run only at time of creation
   generationId: undefined,
@@ -21,7 +22,8 @@ const DEFAULT_PROPERTIES = {
 }
 
 class Dragon {
-  constructor({ birthdate, nickname, traits, generationId } = {}, ) {
+  constructor({ dragonId, birthdate, nickname, traits, generationId } = {}, ) {
+    this.dragonId = dragonId || DEFAULT_PROPERTIES.dragonId;
     this.birthdate = birthdate || DEFAULT_PROPERTIES.birthdate;
     this.nickname = nickname || DEFAULT_PROPERTIES.nickname;
     this.traits = traits || DEFAULT_PROPERTIES.randomTraits;

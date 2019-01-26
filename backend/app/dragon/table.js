@@ -21,11 +21,31 @@ class DragonTable {
                 traitType: traitType,
                 traitValue: traitValue
               });
-            })).then(() => resolve({ dragonId }))
+            })).then(() => resolve({ dragonId: dragonId }))
             .catch((error) => reject(error));
         })
     })
   }
+  static getDragon({ dragonId }) {
+      return new Promise((resolve, reject) => {
+        pool.query(
+          `SELECT birthdate, nickname, "generationId" 
+          FROM dragon 
+          WHERE dragon.id = $1`,
+          [dragonId],
+          (error, response) => {
+            if(error) return reject(error);
+            if(response.rows.length === 0) return reject(new Error('no dragon'))
+            resolve(response.rows[0]); //gets [birthday, nickname, "generationId"] from dragon.id selection
+          }
+        )
+    })
+  }
 }
+
+// //debug code
+// DragonTable.getDragon({ dragonId : 2 })
+//   .then(dragon => console.log('full dragon resolved: ', dragon))
+//   .catch((error) => console.log(error))
 
 module.exports = DragonTable;
