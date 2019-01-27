@@ -1,4 +1,4 @@
 node_modules/
 secrets/
-.cache
-dist
+frontend/.cache/
+frontend/dist/

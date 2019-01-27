@@ -1,32 +1,28 @@
 import React from 'react';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
+import { Provider } from 'react-redux';
 import { render } from 'react-dom';
+import thunk from 'redux-thunk';
 import Generation from './components/Generation';
 import Dragon from './components/Dragon';
 import './index.css'
 import { generationReducer } from './reducers/index';
 import { generationActionCreator } from './actions/index';
 
-const store = createStore(generationReducer);
-store.subscribe(() => console.log('store update: ', store.getState()));
-
-const zooAction = generationActionCreator({
-  generationId: 'zoo',
-  expiration: 'bar'
-})
-store.dispatch(zooAction)
-
-fetch('http://localhost:3000/generation')
-  .then(response => response.json())
-  .then(json => {
-    store.dispatch(generationActionCreator(json.generation))
-  })
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(
+  generationReducer, 
+  composeEnhancers(applyMiddleware(thunk))
+  )
 
 render(
-  <div>
-    <h2>Dragon Stack</h2>
-    <Generation />
-    <Dragon />
-  </div>,
+  <Provider store={store}>
+    <div>
+      <h2>Dragon Stack</h2>
+      <Generation />
+      <Dragon />
+    </div>
+  </Provider>
+  ,
   document.getElementById('root')
 );
