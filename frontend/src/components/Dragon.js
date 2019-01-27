@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import DragonAvatar from './DragonAvatar';
+import { Button } from 'react-bootstrap';
 
 class Dragon extends Component {
   state = { 
@@ -23,19 +25,16 @@ class Dragon extends Component {
         this.setState({ 
           dragon: json.dragon
         })
-        console.log('state ', this.state)
       })
       .catch(error => console.log(error))
   }
 
 
   render() {
-    const { dragon } = this.state
     return (
       <div>
-        <span>G{dragon.generationId}.</span>
-        <span>I{dragon.dragonId}.</span>
-        {dragon.traits.map(trait => trait.traitValue).join(', ')}
+        <button onClick={this.fetchDragon}>New Dragon</button>
+        <DragonAvatar dragon={this.state.dragon} />
       </div>
     )
   }
