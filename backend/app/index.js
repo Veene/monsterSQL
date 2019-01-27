@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors'); //need this to grab from backend db
 const GenerationEngine = require('./generation/engine.js')
 const dragonRouter = require('./api/dragon.js')
 const generationRouter = require('./api/generation.js')
@@ -7,6 +8,10 @@ const app = express()
 const engine = new GenerationEngine();
 
 app.locals.engine = engine;
+
+//we had backend at localhost 3000 and frontend on localhost 1234, same origin policy blocked. so we need to use cors
+app.use(cors({ origin: 'http://localhost:1234' })); //need same origin policy between backend and frontend to prevent cross site scripting attacks
+
 app.use('/dragon', dragonRouter);
 app.use('/generation', generationRouter);
 
