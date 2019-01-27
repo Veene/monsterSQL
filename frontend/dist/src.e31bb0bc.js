@@ -24646,41 +24646,36 @@ function (_Component) {
         traits: [],
         dragonId: ''
       }
-    }, _temp));
-  }
-
-  _createClass(Dragon, [{
-    key: "fetchDragon",
-    value: function fetchDragon() {
-      var _this2 = this;
-
+    }, _this.fetchDragon = function () {
       fetch("http://localhost:3000/dragon/new").then(function (dragon) {
         return dragon.json();
       }).then(function (json) {
         // this.setState({ dragon: json})
         console.log('json from fetchDragon: ', json);
 
-        _this2.setState({
-          birthdate: json.dragon.birthdate,
-          nickname: json.dragon.nickname,
-          generationId: json.dragon.generationId,
-          traits: json.dragon.traits
+        _this.setState({
+          dragon: json.dragon
         });
 
-        console.log('state ', _this2.state);
+        console.log('state ', _this.state);
+      }).catch(function (error) {
+        return console.log(error);
       });
+    }, _temp));
+  }
+
+  _createClass(Dragon, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.fetchDragon();
     }
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
-
       var dragon = this.state.dragon;
-      return _react.default.createElement("div", null, _react.default.createElement("h2", null, "DRAGON"), _react.default.createElement("button", {
-        onClick: function onClick() {
-          return _this3.fetchDragon();
-        }
-      }, "Get Dragon"), _react.default.createElement("div", null, "Birthdate:", this.state.birthdate), _react.default.createElement("div", null, "nick: ", this.state.nickname), _react.default.createElement("div", null, "genId: ", this.state.generationId));
+      return _react.default.createElement("div", null, _react.default.createElement("span", null, "G", dragon.generationId, "."), _react.default.createElement("span", null, "I", dragon.dragonId, "."), dragon.traits.map(function (trait) {
+        return trait.traitValue;
+      }).join(', '));
     }
   }]);
 
