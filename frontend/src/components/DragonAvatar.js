@@ -37,8 +37,8 @@ class DragonAvatar extends React.Component {
   
   render() {
     const { generationId, dragonId, traits } = this.props.dragon;
-    if(!this.props.dragon) {
-      return <div>Loading..</div>
+    if(!dragonId) {
+      return <div>No Dragon ..</div>
     }
     return (
 

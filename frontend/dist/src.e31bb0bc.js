@@ -27267,6 +27267,17 @@ var DRAGON = {
   FETCH_SUCCESS: 'DRAGON_FETCH_SUCCESS'
 };
 exports.DRAGON = DRAGON;
+},{}],"config.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.BACKEND = void 0;
+var BACKEND = {
+  ADDRESS: 'http://localhost:3000'
+};
+exports.BACKEND = BACKEND;
 },{}],"actions/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -27277,16 +27288,14 @@ exports.fetchDragon = exports.fetchGeneration = void 0;
 
 var _types = require("./types");
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+var _config = require("../config");
 
 var fetchGeneration = function fetchGeneration() {
   return function (dispatch) {
     dispatch({
       type: _types.GENERATION.FETCH
     });
-    return fetch('http://localhost:3000/generation').then(function (response) {
+    return fetch("".concat(_config.BACKEND.ADDRESS, "/generation")).then(function (response) {
       return response.json();
     }).then(function (json) {
       if (json.type === 'error') {
@@ -27312,61 +27321,41 @@ var fetchGeneration = function fetchGeneration() {
 exports.fetchGeneration = fetchGeneration;
 
 var fetchDragon = function fetchDragon() {
-  return (
-    /*#__PURE__*/
-    function () {
-      var _ref = _asyncToGenerator(
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee(dispatch) {
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                dispatch({
-                  type: _types.DRAGON.FETCH
-                });
-                fetch('http://localhost:3000/dragon/new').then(function (response) {
-                  console.log(response);
-                  response.json();
-                }).then(function (json) {
-                  if (json.type === 'error') {
-                    dispatch({
-                      type: _types.DRAGON.FETCH_ERROR,
-                      payload: json.message
-                    });
-                  } else {
-                    dispatch({
-                      type: _types.DRAGON.FETCH_SUCCESS,
-                      payload: json.dragon
-                    });
-                  }
-                }).catch(function (error) {
-                  return console.log(error);
-                }); // .catch(error => dispatch({ type: DRAGON.FETCH_ERROR, payload: error.message}))
-                // const response = await fetch('http://localhost:3000/dragon/new').json();
-                // console.log('response: ', response)
-                // dispatch({
-                //   type: DRAGON_FETCH,
-                //   payload: response
-                // });
-
-              case 2:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this);
-      }));
-
-      return function (_x) {
-        return _ref.apply(this, arguments);
-      };
-    }()
-  );
+  return function (dispatch) {
+    dispatch({
+      type: _types.DRAGON.FETCH
+    });
+    fetch("".concat(_config.BACKEND.ADDRESS, "/dragon/new")).then(function (response) {
+      return response.json();
+    }).then(function (json) {
+      if (json.type === 'error') {
+        dispatch({
+          type: _types.DRAGON.FETCH_ERROR,
+          payload: json.message
+        });
+      } else {
+        dispatch({
+          type: _types.DRAGON.FETCH_SUCCESS,
+          payload: json.dragon
+        });
+      }
+    }).catch(function (error) {
+      return console.log(error);
+    }); // .catch(error => dispatch({ type: DRAGON.FETCH_ERROR, payload: error.message}))
+    // const response = fetch('http://localhost:3000/dragon/new');
+    // console.log('response: ', response)
+    // response.then((response) => response.json())
+    // .then((response) => {
+    //   dispatch({
+    //     type: DRAGON.FETCH_SUCCESS,
+    //     payload: response.dragon
+    //   });
+    // })
+  };
 };
 
 exports.fetchDragon = fetchDragon;
-},{"./types":"actions/types.js"}],"reducers/fetchStates.js":[function(require,module,exports) {
+},{"./types":"actions/types.js","../config":"config.js"}],"reducers/fetchStates.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27701,8 +27690,8 @@ function (_React$Component) {
           dragonId = _this$props$dragon.dragonId,
           traits = _this$props$dragon.traits;
 
-      if (!this.props.dragon) {
-        return _react.default.createElement("div", null, "Loading..");
+      if (!dragonId) {
+        return _react.default.createElement("div", null, "No Dragon ..");
       }
 
       return _react.default.createElement("div", null, _react.default.createElement("span", null, "G", generationId, "."), _react.default.createElement("span", null, "I", dragonId, "."), traits.map(function (trait) {
@@ -27760,34 +27749,16 @@ function (_Component) {
   _inherits(Dragon, _Component);
 
   function Dragon() {
-    var _getPrototypeOf2;
-
-    var _this;
-
-    var _temp;
-
     _classCallCheck(this, Dragon);
 
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _possibleConstructorReturn(_this, (_temp = _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(Dragon)).call.apply(_getPrototypeOf2, [this].concat(args))), _this.fetchDragon = function () {
-      _this.props.fetchDragon();
-    }, _temp));
+    return _possibleConstructorReturn(this, _getPrototypeOf(Dragon).apply(this, arguments));
   }
 
   _createClass(Dragon, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this.fetchDragon();
-    }
-  }, {
     key: "render",
     value: function render() {
-      console.log('this.props in DRAGON.js: ', this.props);
       return _react.default.createElement("div", null, _react.default.createElement("button", {
-        onClick: this.fetchDragon
+        onClick: this.props.fetchDragon
       }, "New Dragon"), _react.default.createElement(_DragonAvatar.default, {
         dragon: this.props.dragon
       }));
@@ -27797,7 +27768,7 @@ function (_Component) {
   return Dragon;
 }(_react.Component);
 
-var mapStateToProps = function mapStateToProps(state, ownProps) {
+var mapStateToProps = function mapStateToProps(state) {
   return {
     dragon: state.dragon
   };
@@ -27866,7 +27837,11 @@ exports.default = void 0;
 
 var _types = require("../actions/types");
 
+var _fetchStates = _interopRequireDefault(require("./fetchStates"));
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var DEFAULT_DRAGON = {
   dragonId: '',
@@ -27881,8 +27856,21 @@ var dragonReducer = function dragonReducer() {
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
-    case _types.DRAGON_FETCH:
-      return _extends({}, state, action.payload);
+    case _types.DRAGON.FETCH:
+      return _extends({}, state, {
+        status: _fetchStates.default.fetching
+      });
+
+    case _types.DRAGON.FETCH_SUCCESS:
+      return _extends({}, state, {
+        status: _fetchStates.default.success
+      }, action.payload);
+
+    case _types.DRAGON.FETCH_ERROR:
+      return _extends({}, state, {
+        status: _fetchStates.default.error,
+        message: action.payload
+      });
 
     default:
       return state;
@@ -27891,7 +27879,7 @@ var dragonReducer = function dragonReducer() {
 
 var _default = dragonReducer;
 exports.default = _default;
-},{"../actions/types":"actions/types.js"}],"reducers/index.js":[function(require,module,exports) {
+},{"../actions/types":"actions/types.js","./fetchStates":"reducers/fetchStates.js"}],"reducers/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28044,7 +28032,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52360" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49299" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

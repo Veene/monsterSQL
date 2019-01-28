@@ -1,8 +1,9 @@
 import { GENERATION, DRAGON } from './types';
+import { BACKEND } from '../config';
 
 export const fetchGeneration = () => dispatch => {
   dispatch({ type: GENERATION.FETCH })
-  return fetch('http://localhost:3000/generation')
+  return fetch(`${BACKEND.ADDRESS}/generation`)
     .then(response => response.json())
     .then(json => {
       if(json.type === 'error') {
@@ -18,14 +19,11 @@ export const fetchGeneration = () => dispatch => {
     }));
 };
 
-export const fetchDragon = () => async dispatch => {
+export const fetchDragon = () => dispatch => {
   dispatch({ type: DRAGON.FETCH })
 
-  fetch('http://localhost:3000/dragon/new')
-    .then(response => {
-      console.log(response)
-      response.json()
-    } )
+  fetch(`${BACKEND.ADDRESS}/dragon/new`)
+    .then(response => response.json())
     .then(json => {
       if(json.type === 'error') {
         dispatch({ type: DRAGON.FETCH_ERROR, payload: json.message});
@@ -34,13 +32,18 @@ export const fetchDragon = () => async dispatch => {
       }
     })
     .catch(error => console.log(error));
+
     // .catch(error => dispatch({ type: DRAGON.FETCH_ERROR, payload: error.message}))
 
-    
-    // const response = await fetch('http://localhost:3000/dragon/new').json();
+
+    // const response = fetch('http://localhost:3000/dragon/new');
     // console.log('response: ', response)
-    // dispatch({
-    //   type: DRAGON_FETCH,
-    //   payload: response
-    // });
+    // response.then((response) => response.json())
+    // .then((response) => {
+    //   dispatch({
+    //     type: DRAGON.FETCH_SUCCESS,
+    //     payload: response.dragon
+    //   });
+    // })
+    
 }
