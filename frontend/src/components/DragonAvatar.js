@@ -37,7 +37,11 @@ class DragonAvatar extends React.Component {
   
   render() {
     const { generationId, dragonId, traits } = this.props.dragon;
+    if(!this.props.dragon) {
+      return <div>Loading..</div>
+    }
     return (
+
       <div>
         <span>G{generationId}.</span>
         <span>I{dragonId}.</span>

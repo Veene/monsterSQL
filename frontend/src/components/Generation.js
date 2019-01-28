@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchGeneration } from '../actions/index';
+import fetchStates from '../reducers/fetchStates';
 
 class Generation extends Component {
   timer = null;
@@ -13,24 +14,30 @@ class Generation extends Component {
   }
 
   fetchNextGeneration = () => {
+    
     const MINIMUM_DELAY = 5000;
     this.props.fetchGeneration();
 
     //getTime is in miliseconds
     let delay = new Date(this.props.generation.expiration).getTime() - new Date().getTime();
-    // console.log('delay: ',delay)
-    // console.log('new Date(this.props.generation.expiration).getTime(): ',new Date(this.props.generation.expiration).getTime())
-    // console.log('this.props.generation.expiration: ',this.props.generation.expiration)
-    if(delay < MINIMUM_DELAY) {
+
+    if(delay < MINIMUM_DELAY || undefined) {
       delay = MINIMUM_DELAY
     }
     //need to set to this.timer because otherwise it would be local scoped and we wouldnt be able to clear in unmount
-    this.timer = setTimeout(() => this.fetchNextGeneration(), delay);
+    this.timer = setTimeout(() => this.fetchNextGeneration(), 5000);
   }
 
   render() {
-    console.log('this.props', this.props)
+    
     const { generation } = this.props;
+
+    // if(generation.status === fetchStates.fetching) {
+    //   return <div>...</div>
+    // }
+    if(generation.status === fetchStates.error) {
+      return <div>{generation.message}</div>
+    }
     return (
       <div>
         <h3>Generation {generation.generationId}. Expires on:</h3>
@@ -41,7 +48,7 @@ class Generation extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   return {
-    generation: state
+    generation: state.generation
   }
 }
 
