@@ -11,7 +11,7 @@ const GenerationTable = {
           if (error) return reject(error);
 
           const generationId = response.rows[0].id;
-          console.log('from the query return: ',generationId)
+          // console.log('from the query return: ',generationId)
 
           resolve({ generationId });
         }

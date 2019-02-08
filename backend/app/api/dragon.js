@@ -18,6 +18,7 @@ router.get('/new', (req, res, next) => {
       //grab that id created on table, so that we can reference dragon inside table
       dragon.dragonId = dragonId
 
+      //PUTS THIS OUT TO PAGE, so when fetched with an api, the api grabs this json
       res.json({ dragon });
     })
     .catch((error) => next(error));
